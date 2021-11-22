@@ -1,32 +1,33 @@
 const http = require('http');
 const path = require('path');
 const url = require('url');
+const { STATUS, MESSAGE } = require('./src/entities/constants');
+const { DB } = require('./src/entities/db');
 const { Method } = require('./src/entities/enum');
-const { findEl, getAllData } = require('./src/helpers/dataWorker');
-const { reqIsCurrect, parseReqPath } = require('./src/helpers/parser');
+const { createResponse, createErrResponse } = require('./src/helpers/helpers');
+const { parseReqPath } = require('./src/helpers/parser');
 require('dotenv').config();
 
 const port = process.env.PORT;
 
 const server = http.createServer((req, res) => {
+  const db = new DB();
   const reqUrl = url.parse(req.url, false);
-  const reqParams = parseReqPath(reqUrl.pathname);
+  let reqParams;
+  try {
+    reqParams = parseReqPath(reqUrl.pathname);
+  } catch (err) {
+    createErrResponse(res, STATUS.notFound, err.message);
+    return;
+  }
+
   switch (req.method) {
     case Method.get:
-      if (reqParams.type) {
-        const el = reqParams.id ? findEl(reqParams.id) : getAllData();
-        if (!el) {
-          res.writeHead(406, { 'Content-type': 'application/json' });
-          res.write(JSON.stringify({ message: 'user not found' }));
-          res.end();
-        } else {
-          res.writeHead(200, { 'Content-type': 'application/json' });
-          res.write(JSON.stringify(el));
-          res.end();
-        }
-      } else {
-        res.writeHead(404, { 'Content-type': 'application/json' });
-        res.end('is no Currect');
+      try {
+        const el = db.getElById(reqParams.id);
+        createResponse(res, STATUS.ok, el);
+      } catch (err) {
+        createErrResponse(res, STATUS.notFound, err.message);
       }
       break;
 
