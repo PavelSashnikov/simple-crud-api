@@ -1,6 +1,5 @@
-const uuidv = require('uuid');
 const { DB_PATH, MESSAGE } = require('../entities/constants');
-const { NotFoundErr, ValidateErr } = require('../entities/err');
+const { NotFoundErr } = require('../entities/err');
 
 function parseReqPath(path) {
   const pathArr = path

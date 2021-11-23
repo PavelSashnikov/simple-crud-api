@@ -9,12 +9,12 @@ module.exports = {
   },
   DB_PATH: ['person'],
   MESSAGE: {
-    wrongPath: 'Bad request',
+    wrongPath: 'Wrong request',
     notFound: 'Not found',
     noValidId: 'Id is not valid',
-    wrongParams: 'wrong params',
+    wrongParams: 'Wrong params',
   },
-  PERSON_VALID_FIELDS: {
-    name: 'string',
+  CONTENT_TYPE: {
+    json: { 'Content-Type': 'application/json' },
   },
 };
