@@ -9,7 +9,6 @@ class DB {
   }
 
   _validatePerson(obj) {
-    obj.hobbies = this._trimArr(obj.hobbies);
     for (const key in Person) {
       if (Person.hasOwnProperty(key)) {
         if (!Person[key](obj[key])) {
@@ -18,13 +17,6 @@ class DB {
       }
     }
     return true;
-  }
-
-  _trimArr(str) {
-    if (!str?.match(/^\[.*\]$/g)) {
-      return '';
-    }
-    return str?.replace(/['[\]\s]/g, '').split(',').map(el => +el || el);
   }
 
   getElById(id) {
