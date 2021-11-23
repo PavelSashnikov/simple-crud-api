@@ -52,6 +52,18 @@ const server = http.createServer((req, res) => {
       }
       break;
 
+    case Method.put:
+      try {
+        const el = db.update(reqParams.id, reqUrl.query);
+        createResponse(res, STATUS.ok, el);
+      } catch (err) {
+        if (err.isCustom) {
+          createErrResponse(res, err.status, err.message);
+          return;
+        }
+        createErrResponse(res, STATUS.servErr, err.message);
+      }
+
     default:
       res.end(req.method);
       break;
