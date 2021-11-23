@@ -63,9 +63,26 @@ const server = http.createServer((req, res) => {
         }
         createErrResponse(res, STATUS.servErr, err.message);
       }
+      break;
+    case Method.del:
+      try {
+        db.remove(reqParams.id);
+        createResponse(res, STATUS.deleted, {
+          message: `${reqParams.id} was removed successfully`,
+        });
+      } catch (err) {
+        if (err.isCustom) {
+          createErrResponse(res, err.status, err.message);
+          return;
+        }
+        createErrResponse(res, STATUS.servErr, err.message);
+      }
+      break;
 
     default:
-      res.end(req.method);
+      createErrResponse(res, STATUS.servErr, {
+        message: `not expected request method ${req.method}`,
+      });
       break;
   }
 });

@@ -11,8 +11,6 @@ function parseReqPath(path) {
 
   if (!DB_PATH.includes(pathArr[0]) || pathArr.length > 2) {
     throw new NotFoundErr(MESSAGE.wrongPath);
-  } else if (pathArr[1] && !uuidv.validate(pathArr[1])) {
-    throw new ValidateErr(MESSAGE.noValidId);
   }
   return {
     type: pathArr[0],
