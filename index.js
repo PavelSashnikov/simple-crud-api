@@ -8,7 +8,7 @@ const { createResponse, createErrResponse } = require('./src/helpers/helpers');
 const { parseReqPath } = require('./src/helpers/parser');
 require('dotenv').config();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3030;
 const db = new DB();
 
 const server = http.createServer((req, res) => {
@@ -88,5 +88,6 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(port, () => {
+  console.log("🚀 ~ file: index.js ~ line 91 ~ server.listen ~ port", typeof port)
   console.log(`Listening on ${port}...`);
 });
