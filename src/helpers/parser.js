@@ -9,15 +9,15 @@ function parseReqPath(path) {
     .split(' ')
     .filter((n) => n);
 
-  if (!DB_PATH.includes(pathArr[0])) {
-    throw new NotFoundErr(MESSAGE.notFound);
+  if (!DB_PATH.includes(pathArr[0]) || pathArr.length > 2) {
+    throw new NotFoundErr(MESSAGE.wrongPath);
   } else if (pathArr[1] && !uuidv.validate(pathArr[1])) {
-    throw new ValidateErr(MESSAGE.noValidId)
+    throw new ValidateErr(MESSAGE.noValidId);
   }
-    return {
-      type: pathArr[0],
-      id: pathArr[1],
-    };
+  return {
+    type: pathArr[0],
+    id: pathArr[1],
+  };
 }
 
 module.exports = { parseReqPath };

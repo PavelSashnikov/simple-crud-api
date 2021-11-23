@@ -9,15 +9,19 @@ const { parseReqPath } = require('./src/helpers/parser');
 require('dotenv').config();
 
 const port = process.env.PORT;
+const db = new DB();
 
 const server = http.createServer((req, res) => {
-  const db = new DB();
-  const reqUrl = url.parse(req.url, false);
+  const reqUrl = url.parse(req.url, true);
   let reqParams;
   try {
     reqParams = parseReqPath(reqUrl.pathname);
   } catch (err) {
-    createErrResponse(res, STATUS.notFound, err.message);
+    if (err.isCustom) {
+      createErrResponse(res, STATUS.notFound, err.message);
+      return;
+    }
+    createErrResponse(res, STATUS.servErr, err.message);
     return;
   }
 
@@ -27,7 +31,24 @@ const server = http.createServer((req, res) => {
         const el = db.getElById(reqParams.id);
         createResponse(res, STATUS.ok, el);
       } catch (err) {
-        createErrResponse(res, STATUS.notFound, err.message);
+        if (err.isCustom) {
+          createErrResponse(res, err.status, err.message);
+          return;
+        }
+        createErrResponse(res, STATUS.servErr, err.message);
+      }
+      break;
+
+    case Method.post:
+      try {
+        const el = db.set(reqUrl.query);
+        createResponse(res, STATUS.created, el);
+      } catch (err) {
+        if (err.isCustom) {
+          createErrResponse(res, err.status, err.message);
+          return;
+        }
+        createErrResponse(res, STATUS.servErr, err.message);
       }
       break;
 

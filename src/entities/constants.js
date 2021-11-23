@@ -5,11 +5,16 @@ module.exports = {
     notFound: 404,
     created: 201,
     deleted: 204,
+    servErr: 500,
   },
   DB_PATH: ['person'],
   MESSAGE: {
     wrongPath: 'Bad request',
     notFound: 'Not found',
-    noValidId: 'Id is not valid'
+    noValidId: 'Id is not valid',
+    wrongParams: 'wrong params',
+  },
+  PERSON_VALID_FIELDS: {
+    name: 'string',
   },
 };
