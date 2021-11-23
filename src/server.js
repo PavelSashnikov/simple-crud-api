@@ -10,6 +10,10 @@ require('dotenv').config();
 const db = new DB();
 
 const server = http.createServer((req, res) => {
+  process.on('uncaughtException', function (err) {
+    createErrResponse(res, STATUS.servErr, err?.message || 'oops');
+  });
+
   const reqUrl = url.parse(req.url, true);
   let reqParams;
   try {
@@ -59,22 +63,22 @@ const server = http.createServer((req, res) => {
       break;
 
     case Method.put:
-      try {
-        let r = '';
-        req.on('data', (data) => {
-          r += data.toString();
-        });
-        req.on('end', () => {
-          const el = db.update(reqParams.id, JSON.parse(r));
+      let putRes = '';
+      req.on('data', (data) => {
+        putRes += data.toString();
+      });
+      req.on('end', () => {
+        try {
+          const el = db.update(reqParams.id, JSON.parse(putRes));
           createResponse(res, STATUS.ok, el);
-        });
-      } catch (err) {
-        if (err.isCustom) {
-          createErrResponse(res, err.status, err.message);
-          return;
+        } catch (err) {
+          if (err.isCustom) {
+            createErrResponse(res, err.status, err.message);
+            return;
+          }
+          createErrResponse(res, STATUS.servErr, err.message);
         }
-        createErrResponse(res, STATUS.servErr, err.message);
-      }
+      });
       break;
     case Method.del:
       try {
