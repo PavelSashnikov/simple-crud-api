@@ -10,7 +10,7 @@
  
  ```npm run start:prod``` -- create bundle with ```webpack``` and start it
 
- ```npm run test``` -- run tests. You have to start the server before running tests
+ ```npm run test``` -- run tests. You have to start the server before running tests. Please, start the server before sending requests (in-memory DB should be empty).
 ___
 Server supports methods *GET POST PUT DELETE* and use in-memory DB:  
     * **GET** `/person` or `/person/${personId}` should return all persons or person with corresponding `personId`  
