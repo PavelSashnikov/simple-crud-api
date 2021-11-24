@@ -6,6 +6,7 @@ module.exports = {
     created: 201,
     deleted: 204,
     servErr: 500,
+    notImpl: 501,
   },
   DB_PATH: ['person'],
   MESSAGE: {

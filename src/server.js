@@ -96,7 +96,7 @@ const server = http.createServer((req, res) => {
       break;
 
     default:
-      createErrResponse(res, STATUS.servErr, {
+      createErrResponse(res, STATUS.notImpl, {
         message: `not expected request method ${req.method}`,
       });
       break;
