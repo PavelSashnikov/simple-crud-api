@@ -3,9 +3,18 @@ const uuidv = require('uuid');
 const { STATUS } = require('../src/entities/constants');
 require('dotenv').config();
 
-describe('e2e API test', () => {
-  const server = `http://localhost:${process.env.PORT || 3030}`;
-  let testItemId;
+const server = `http://localhost:${process.env.PORT || 3030}`;
+describe('API success', () => {
+  let person;
+
+  beforeEach(() => {
+    person = {
+      ...person,
+      name: 'Vi',
+      age: '23',
+      hobbies: ['enduro', 'snowboadring'],
+    };
+  });
 
   test('should be persons array', async () => {
     const response = await request(server).get('/person');
@@ -13,68 +22,102 @@ describe('e2e API test', () => {
   });
 
   test('should create person', async () => {
-    const person = {
-      name: 'Vi',
-      age: '23',
-      hobbies: ['enduro', 'snowboadring'],
-    };
-
     const response = await request(server)
       .post('/person')
       .send(person)
       .expect(201);
 
     person.id = response.body.id;
-    testItemId = response.body.id;
 
     expect(uuidv.validate(response.body.id)).toBeTruthy();
     expect(response.body).toEqual(person);
 
-    const newItem = await request(server).get(`/person/${testItemId}`);
+    const newItem = await request(server).get(`/person/${person.id}`);
     expect(newItem.body).toEqual(person);
   });
 
-  test('should be err (invalid hobbies)', async () => {
-    const person = {
-      name: 'Vi',
-      age: '23',
-      hobbies: 'snowboadring',
-    };
-
-    await request(server).post('/person').send(person).expect(STATUS.notValid);
-  });
-
-  test('should be err (invalid age)', async () => {
-    const person = {
-      name: 'Vi',
-      age: '2w',
-      hobbies: ['snowboadring'],
-    };
-
-    await request(server).post('/person').send(person).expect(STATUS.notValid);
-  });
-
   test('should person change', async () => {
-    const person = {
-      name: 'testName',
-      age: '23',
-      hobbies: ['snowboadring'],
-    };
     const response = await request(server)
-      .put(`/person/${testItemId}`)
+      .put(`/person/${person.id}`)
       .send(person)
       .expect(200);
-
-    person.id = testItemId;
 
     expect(response.body).toEqual(person);
   });
 
   test('should person remove', async () => {
-    await request(server)
-      .delete(`/person/${testItemId}`)
-      .expect(STATUS.deleted);
+    await request(server).delete(`/person/${person.id}`).expect(STATUS.deleted);
 
-    await request(server).get(`/person/${testItemId}`).expect(STATUS.notFound);
+    await request(server).get(`/person/${person.id}`).expect(STATUS.notFound);
+  });
+});
+
+describe('API person err', () => {
+  let person;
+  beforeEach(() => {
+    person = {
+      name: 'Vi',
+      age: '23',
+      hobbies: ['snowboadring'],
+    };
+  });
+
+  test('should be err (invalid age)', async () => {
+    const response = await request(server)
+      .post('/person')
+      .send(person)
+      .expect(201);
+
+    person.age = 'string';
+    const id = response.body.id;
+    await request(server)
+      .post(`/person/${id}`)
+      .send(person)
+      .expect(STATUS.notValid);
+  });
+
+  test('should be err (invalid id)', async () => {
+    const response = await request(server).get('/person/123').send(person);
+    expect(response.statusCode).toBe(STATUS.notValid);
+  });
+});
+
+describe('API random flow', () => {
+  let person;
+
+  beforeEach(() => {
+    person = {
+      ...person,
+      name: 'Vi',
+      age: '23',
+      hobbies: ['enduro', 'snowboadring'],
+    };
+  });
+
+  test('should person remove', async () => {
+    await request(server)
+      .delete(`/person/${person.id}`)
+      .expect(STATUS.notValid);
+  });
+
+  test('should create person and get new one', async () => {
+    const response = await request(server)
+      .post('/person')
+      .send(person)
+      .expect(201);
+
+    person.id = response.body.id;
+
+    expect(uuidv.validate(response.body.id)).toBeTruthy();
+    expect(response.body).toEqual(person);
+
+    const newItem = await request(server).get(`/person/${person.id}`);
+    expect(newItem.body).toEqual(person);
+  });
+
+  test('should person remove', async () => {
+    await request(server).delete(`/person/${person.id}`).expect(STATUS.deleted);
+
+    await request(server).get(`/person/${person.id}`).expect(STATUS.notFound);
   });
 });
