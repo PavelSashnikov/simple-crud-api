@@ -25,10 +25,10 @@ class DB {
     }
 
     if (!uuidv.validate(id)) {
-      throw new ValidateErr(`${MESSAGE.noValidId} ${id}`, STATUS.notValid);
+      throw new ValidateErr(`${MESSAGE.noValidId} (${id})`, STATUS.notValid);
     }
     if (!this.db.has(id)) {
-      throw new NotFoundErr(`${MESSAGE.notFound} ${id}`, STATUS.notFound);
+      throw new NotFoundErr(`${MESSAGE.notFound} (${id})`, STATUS.notFound);
     }
 
     return this.db.get(id);
@@ -50,10 +50,10 @@ class DB {
 
   update(id, obj) {
     if (!uuidv.validate(id)) {
-      throw new ValidateErr(`${MESSAGE.noValidId} ${id}`, STATUS.notValid);
+      throw new ValidateErr(`${MESSAGE.noValidId} (${id})`, STATUS.notValid);
     }
     if (!this.db.has(id)) {
-      throw new NotFoundErr(`${MESSAGE.notFound} ${id}`, STATUS.notFound);
+      throw new NotFoundErr(`${MESSAGE.notFound} (${id})`, STATUS.notFound);
     }
     if (!this._validatePerson(obj)) {
       throw new ValidateErr(MESSAGE.wrongParams, STATUS.notValid);
@@ -65,10 +65,10 @@ class DB {
 
   remove(id) {
     if (!uuidv.validate(id)) {
-      throw new ValidateErr(`${MESSAGE.noValidId} ${id}`, STATUS.notValid);
+      throw new ValidateErr(`${MESSAGE.noValidId} (${id})`, STATUS.notValid);
     }
     if (!this.db.has(id)) {
-      throw new NotFoundErr(`${MESSAGE.notFound} ${id}`, STATUS.notFound);
+      throw new NotFoundErr(`${MESSAGE.notFound} (${id})`, STATUS.notFound);
     }
     this.db.delete(id);
   }
