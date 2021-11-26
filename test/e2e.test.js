@@ -16,11 +16,6 @@ describe('API success', () => {
     };
   });
 
-  test('should be persons array', async () => {
-    const response = await request(server).get('/person');
-    expect(response.body).toEqual([]);
-  });
-
   test('should create person', async () => {
     const response = await request(server)
       .post('/person')
@@ -34,6 +29,11 @@ describe('API success', () => {
 
     const newItem = await request(server).get(`/person/${person.id}`);
     expect(newItem.body).toEqual(person);
+  });
+
+  test('should be persons array', async () => {
+    const response = await request(server).get('/person');
+    expect(response.body.length).toBeGreaterThanOrEqual(1);
   });
 
   test('should person change', async () => {
