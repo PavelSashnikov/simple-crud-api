@@ -10,10 +10,7 @@ require('dotenv').config();
 const db = new DB();
 
 const server = http.createServer((req, res) => {
-  process.on('uncaughtException', function (err) {
-    createErrResponse(res, STATUS.servErr, err?.message || 'oops');
-  });
-
+  //TODO: find a way to use 'uncaughtException' subscription
   const reqUrl = url.parse(req.url, true);
   let reqParams;
   try {
