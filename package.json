@@ -1,0 +1,38 @@
+{
+  "name": "simple-crud-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon index.js",
+    "start:prod": "webpack --mode production && node ./dist/bundle",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PavelSashnikov/simple-crud-api.git"
+  },
+  "author": "PavelSashnikov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PavelSashnikov/simple-crud-api/issues"
+  },
+  "homepage": "https://github.com/PavelSashnikov/simple-crud-api#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.1.6",
+    "webpack": "^5.64.2",
+    "webpack-cli": "^4.9.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  }
+}
